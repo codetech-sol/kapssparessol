@@ -64,7 +64,7 @@ export function ChatAssistant({ onOpenForm }: Props) {
         aria-label="Open KAPS virtual assistant"
         onClick={() => setOpen(true)}
         className={cn(
-          "fixed bottom-6 right-6 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-2xl transition hover:scale-105",
+          "fixed bottom-6 right-6 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-brand-orange text-white shadow-2xl transition hover:scale-105",
           open && "hidden",
         )}
       >
