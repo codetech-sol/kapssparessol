@@ -31,87 +31,151 @@
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-dark: var(--brand-dark);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-orange: var(--brand-orange);
   --font-display: "Oswald", "Impact", sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
 }
 
 :root {
   --radius: 0.5rem;
-  /* KAPS branding: bold automotive red on deep charcoal/steel */
-  --background: oklch(0.985 0.003 250);
-  --foreground: oklch(0.18 0.02 250);
+
+  /* KAPS brand palette */
+  --brand-blue: #2B449C;
+  --brand-orange: #F58220;
+  --brand-blue-dark: #1E3270;
+  --brand-blue-light: #354fa8;
+
+  /* Surfaces on brand blue */
+  --background: var(--brand-blue);
+  --foreground: oklch(1 0 0);
+
+  /* Content containers — white/light with black text */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.02 250);
+  --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.02 250);
-  --primary: oklch(0.56 0.22 27);            /* KAPS red */
+  --popover-foreground: oklch(0.145 0 0);
+
+  /* shadcn semantic tokens */
+  --primary: var(--brand-blue);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.22 0.02 250);         /* Steel / charcoal */
-  --secondary-foreground: oklch(0.98 0.005 250);
-  --muted: oklch(0.95 0.005 250);
+  --secondary: var(--brand-orange);
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.965 0.004 250);
   --muted-foreground: oklch(0.42 0.02 250);
-  --accent: oklch(0.94 0.02 40);
-  --accent-foreground: oklch(0.22 0.02 250);
+  --accent: oklch(0.96 0.03 65);
+  --accent-foreground: oklch(0.145 0 0);
   --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.9 0.01 250);
   --input: oklch(0.9 0.01 250);
-  --ring: oklch(0.56 0.22 27);
-  --brand: oklch(0.56 0.22 27);
+  --ring: var(--brand-orange);
+
+  --brand: var(--brand-blue);
   --brand-foreground: oklch(1 0 0);
-  --brand-dark: oklch(0.16 0.02 250);
+  --brand-dark: var(--brand-blue-dark);
+
   --sidebar: oklch(0.98 0.003 250);
-  --sidebar-foreground: oklch(0.18 0.02 250);
-  --sidebar-primary: oklch(0.56 0.22 27);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: var(--brand-blue);
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.95 0.005 250);
-  --sidebar-accent-foreground: oklch(0.18 0.02 250);
+  --sidebar-accent-foreground: oklch(0.145 0 0);
   --sidebar-border: oklch(0.9 0.01 250);
-  --sidebar-ring: oklch(0.56 0.22 27);
+  --sidebar-ring: var(--brand-orange);
 }
 
 .dark {
-  --background: oklch(0.14 0.015 250);
-  --foreground: oklch(0.98 0.005 250);
-  --card: oklch(0.2 0.02 250);
-  --card-foreground: oklch(0.98 0.005 250);
-  --popover: oklch(0.2 0.02 250);
-  --popover-foreground: oklch(0.98 0.005 250);
-  --primary: oklch(0.62 0.22 27);
+  --background: var(--brand-blue-dark);
+  --foreground: oklch(1 0 0);
+  --card: oklch(0.98 0.003 250);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(0.98 0.003 250);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: var(--brand-blue-light);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.26 0.02 250);
-  --secondary-foreground: oklch(0.98 0.005 250);
-  --muted: oklch(0.26 0.02 250);
-  --muted-foreground: oklch(0.7 0.02 250);
-  --accent: oklch(0.28 0.03 40);
-  --accent-foreground: oklch(0.98 0.005 250);
+  --secondary: var(--brand-orange);
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.22 0.04 264);
+  --muted-foreground: oklch(0.75 0.02 250);
+  --accent: oklch(0.28 0.05 65);
+  --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.65 0.22 25);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.62 0.22 27);
-  --brand: oklch(0.62 0.22 27);
+  --ring: var(--brand-orange);
+  --brand: var(--brand-blue-light);
   --brand-foreground: oklch(1 0 0);
-  --brand-dark: oklch(0.1 0.015 250);
+  --brand-dark: oklch(0.14 0.04 264);
 }
 
 @layer base {
   * { border-color: var(--color-border); }
+
   body {
-    background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-body);
+    background-color: var(--brand-blue);
+    background-image:
+      linear-gradient(
+        110deg,
+        transparent 0%,
+        transparent 62%,
+        color-mix(in srgb, var(--brand-orange) 14%, transparent) 78%,
+        color-mix(in srgb, var(--brand-orange) 22%, transparent) 88%,
+        transparent 100%
+      ),
+      radial-gradient(
+        ellipse 55% 45% at 100% 0%,
+        color-mix(in srgb, var(--brand-orange) 16%, transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        ellipse 40% 30% at 0% 100%,
+        color-mix(in srgb, var(--brand-orange) 8%, transparent),
+        transparent 65%
+      ),
+      linear-gradient(180deg, var(--brand-blue-dark) 0%, var(--brand-blue) 45%, var(--brand-blue) 100%);
+    background-attachment: fixed;
   }
+
   h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.01em; }
 }
 
 @utility gradient-brand {
-  background-image: linear-gradient(135deg, var(--brand-dark) 0%, oklch(0.24 0.03 260) 50%, var(--brand) 100%);
+  background-image:
+    linear-gradient(
+      108deg,
+      transparent 55%,
+      color-mix(in srgb, var(--brand-orange) 28%, transparent) 72%,
+      color-mix(in srgb, var(--brand-orange) 18%, transparent) 82%,
+      transparent 95%
+    ),
+    linear-gradient(135deg, var(--brand-blue-dark) 0%, var(--brand-blue) 55%, var(--brand-blue-light) 100%);
 }
 
 @utility text-gradient-brand {
-  background-image: linear-gradient(90deg, var(--brand) 0%, oklch(0.7 0.2 40) 100%);
+  background-image: linear-gradient(90deg, var(--brand-orange) 0%, oklch(0.78 0.14 65) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+@utility brand-header-bar {
+  background-image: linear-gradient(
+    90deg,
+    var(--brand-orange) 0%,
+    color-mix(in srgb, var(--brand-orange) 70%, white) 45%,
+    var(--brand-orange) 100%
+  );
+}
+
+@utility surface-light {
+  background-color: var(--color-card);
+  color: var(--color-card-foreground);
+}
+
+@utility text-on-brand {
+  color: oklch(1 0 0);
 }

@@ -78,29 +78,28 @@ function Landing() {
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* NAV */}
-      <header className="sticky top-0 z-30 border-b bg-background/85 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+      <header className="sticky top-0 z-30 border-b border-white/10 bg-brand-blue/90 backdrop-blur">
+        <div className="brand-header-bar h-1" />
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 text-white">
           <a href="#top" className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Wrench className="h-5 w-5" />
-            </div>
+            <img src="/logo.png" alt="KAPS Spares Solutions" className="h-10 w-auto" />
             <div className="leading-tight">
               <p className="font-display text-lg font-bold uppercase tracking-tight">KAPS Spares</p>
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Solutions Ltd</p>
+              <p className="text-[10px] uppercase tracking-widest text-white/70">Solutions Ltd</p>
             </div>
           </a>
           <nav className="hidden gap-6 text-sm font-medium md:flex">
-            <a href="#services" className="hover:text-primary">Services</a>
-            <a href="#workshop" className="hover:text-primary">Workshop</a>
-            <a href="#branches" className="hover:text-primary">Branches</a>
-            <a href="#about" className="hover:text-primary">About</a>
-            <a href="#contact" className="hover:text-primary">Contact</a>
+            <a href="#services" className="text-white/90 hover:text-brand-orange">Services</a>
+            <a href="#workshop" className="text-white/90 hover:text-brand-orange">Workshop</a>
+            <a href="#branches" className="text-white/90 hover:text-brand-orange">Branches</a>
+            <a href="#about" className="text-white/90 hover:text-brand-orange">About</a>
+            <a href="#contact" className="text-white/90 hover:text-brand-orange">Contact</a>
           </nav>
           <div className="flex items-center gap-2">
-            <Button size="sm" onClick={scrollToForm}>Request a Part</Button>
-            <Link to="/admin" className="text-xs text-muted-foreground hover:text-foreground">Admin</Link>
+            <Button size="sm" variant="secondary" onClick={scrollToForm}>Request a Part</Button>
+            <Link to="/admin" className="text-xs text-white/60 hover:text-white">Admin</Link>
           </div>
         </div>
       </header>
@@ -121,7 +120,7 @@ function Landing() {
               Japanese, American vehicles and heavy-duty machinery — delivered across Zambia.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button size="lg" variant="secondary" onClick={scrollToForm} className="bg-white text-secondary hover:bg-white/90">
+              <Button size="lg" variant="secondary" onClick={scrollToForm}>
                 Request a Spare Part <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
               <a href="#services">
@@ -141,11 +140,11 @@ function Landing() {
 
       {/* SERVICES */}
       <section id="services" className="mx-auto max-w-7xl px-4 py-20">
-        <SectionHeader eyebrow="Auto Spares Supply" title="Parts for every vehicle we can source" />
+        <SectionHeader eyebrow="Auto Spares Supply" title="Parts for every vehicle we can source" onBrand />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s) => (
-            <div key={s.title} className="group rounded-xl border bg-card p-6 transition hover:border-primary hover:shadow-lg">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition group-hover:bg-primary group-hover:text-primary-foreground">
+            <div key={s.title} className="group rounded-xl border bg-card p-6 text-card-foreground shadow-sm transition hover:border-brand-orange hover:shadow-lg">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-blue/10 text-brand-blue transition group-hover:bg-brand-blue group-hover:text-white">
                 <s.icon className="h-6 w-6" />
               </div>
               <h3 className="mt-4 font-display text-xl font-bold">{s.title}</h3>
@@ -153,34 +152,36 @@ function Landing() {
             </div>
           ))}
         </div>
-        <div className="mt-8 rounded-xl border border-dashed bg-muted/40 p-6 text-center">
+        <div className="mt-8 rounded-xl border border-dashed border-brand-blue/20 bg-card p-6 text-center text-card-foreground shadow-sm">
           <p className="text-sm text-muted-foreground">
             Don't see what you need? We source virtually any part on demand from{" "}
-            <strong className="text-foreground">China, Dubai, South Africa & Japan</strong>.
+            <strong className="text-card-foreground">China, Dubai, South Africa & Japan</strong>.
           </p>
-          <Button className="mt-4" onClick={scrollToForm}>Submit a Spare Parts Request</Button>
+          <Button className="mt-4" variant="secondary" onClick={scrollToForm}>Submit a Spare Parts Request</Button>
         </div>
       </section>
 
       {/* WORKSHOP */}
-      <section id="workshop" className="bg-secondary py-20 text-secondary-foreground">
-        <div className="mx-auto grid max-w-7xl gap-12 px-4 lg:grid-cols-2 lg:items-center">
+      <section id="workshop" className="relative overflow-hidden py-20">
+        <div className="absolute inset-0 bg-brand-blue-dark/80" />
+        <div className="absolute inset-0 opacity-30" style={{ backgroundImage: "linear-gradient(108deg, transparent 50%, rgba(245,130,32,0.35) 75%, transparent 95%)" }} />
+        <div className="relative mx-auto grid max-w-7xl gap-12 px-4 text-white lg:grid-cols-2 lg:items-center">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-widest text-primary">
+            <span className="text-xs font-semibold uppercase tracking-widest text-brand-orange">
               Integrated Service Centre
             </span>
             <h2 className="mt-3 font-display text-4xl font-bold uppercase leading-tight md:text-5xl">
               End-to-end vehicle service &amp; bodywork
             </h2>
-            <p className="mt-4 text-white/75">
+            <p className="mt-4 text-white/80">
               A fully operational automotive workshop serving passenger vehicles, commercial
               fleets and heavy-duty vehicles — committed to quality, reliability and professional
               workmanship.
             </p>
             <div className="mt-6 grid grid-cols-2 gap-3">
               {workshop.map((w) => (
-                <div key={w} className="flex items-center gap-2 rounded-md border border-white/15 bg-white/5 px-3 py-2 text-sm">
-                  <Wrench className="h-4 w-4 text-primary" />
+                <div key={w} className="flex items-center gap-2 rounded-md border border-white/15 bg-white/10 px-3 py-2 text-sm">
+                  <Wrench className="h-4 w-4 text-brand-orange" />
                   {w}
                 </div>
               ))}
@@ -197,7 +198,7 @@ function Landing() {
 
       {/* ABOUT */}
       <section id="about" className="mx-auto max-w-7xl px-4 py-20">
-        <SectionHeader eyebrow="About KAPS" title="A dependable partner in mobility" />
+        <SectionHeader eyebrow="About KAPS" title="A dependable partner in mobility" onBrand />
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
           <ValueCard icon={ShieldCheck} title="Vision" body="To rank among Zambia's top five leading suppliers of auto replacement parts and automotive service solutions." />
           <ValueCard icon={Handshake} title="Mission" body="Provide accessible, high-quality automotive parts and services across Zambia through efficient supply and customer-focused delivery." />
@@ -205,7 +206,7 @@ function Landing() {
         </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {["Customer Commitment", "Excellence & Quality", "Innovation", "Integrity", "Teamwork"].map((v) => (
-            <div key={v} className="rounded-lg border bg-card p-4 text-center text-sm font-semibold">
+            <div key={v} className="rounded-lg border bg-card p-4 text-center text-sm font-semibold text-card-foreground shadow-sm">
               {v}
             </div>
           ))}
@@ -213,18 +214,18 @@ function Landing() {
       </section>
 
       {/* BRANCHES */}
-      <section id="branches" className="bg-muted/40 py-20">
-        <div className="mx-auto max-w-7xl px-4">
+      <section id="branches" className="py-20">
+        <div className="mx-auto max-w-7xl rounded-3xl bg-muted px-4 py-16 shadow-sm sm:px-8">
           <SectionHeader eyebrow="Nationwide Presence" title="Find your nearest KAPS branch" />
           <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {branches.map((b) => (
-              <div key={b.name} className="rounded-xl border bg-card p-6">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary">
+              <div key={b.name} className="rounded-xl border bg-card p-6 text-card-foreground shadow-sm">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-brand-blue">
                   <MapPin className="h-4 w-4" /> {b.city}
                 </div>
                 <h3 className="mt-2 font-display text-xl font-bold">{b.name}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{b.addr}</p>
-                <a href={`tel:${b.phone.replace(/\s/g, "")}`} className="mt-3 flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+                <a href={`tel:${b.phone.replace(/\s/g, "")}`} className="mt-3 flex items-center gap-2 text-sm font-medium text-brand-blue hover:underline">
                   <Phone className="h-4 w-4" /> {b.phone}
                 </a>
               </div>
@@ -235,12 +236,12 @@ function Landing() {
 
       {/* REQUEST FORM */}
       <section id="request" ref={formRef} className="mx-auto max-w-4xl scroll-mt-20 px-4 py-20">
-        <SectionHeader eyebrow="Submit a Request" title="Tell us what you need" />
-        <p className="mt-4 text-center text-muted-foreground">
+        <SectionHeader eyebrow="Submit a Request" title="Tell us what you need" onBrand />
+        <p className="mt-4 text-center text-white/80">
           Send us the details of your spare part or service requirement and our team will get back
           to you with pricing and availability.
         </p>
-        <div className="mt-10 rounded-2xl border bg-card p-6 shadow-sm sm:p-8">
+        <div className="mt-10 rounded-2xl border bg-card p-6 text-card-foreground shadow-lg sm:p-8">
           <RequestForm />
         </div>
       </section>
@@ -294,19 +295,23 @@ function Stat({ n, label }: { n: string; label: string }) {
   );
 }
 
-function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
+function SectionHeader({ eyebrow, title, onBrand = false }: { eyebrow: string; title: string; onBrand?: boolean }) {
   return (
     <div className="text-center">
-      <span className="text-xs font-semibold uppercase tracking-widest text-primary">{eyebrow}</span>
-      <h2 className="mt-3 font-display text-4xl font-bold uppercase leading-tight md:text-5xl">{title}</h2>
+      <span className={onBrand ? "text-xs font-semibold uppercase tracking-widest text-brand-orange" : "text-xs font-semibold uppercase tracking-widest text-brand-blue"}>
+        {eyebrow}
+      </span>
+      <h2 className={onBrand ? "mt-3 font-display text-4xl font-bold uppercase leading-tight text-white md:text-5xl" : "mt-3 font-display text-4xl font-bold uppercase leading-tight text-card-foreground md:text-5xl"}>
+        {title}
+      </h2>
     </div>
   );
 }
 
 function ValueCard({ icon: Icon, title, body }: { icon: typeof ShieldCheck; title: string; body: string }) {
   return (
-    <div className="rounded-xl border bg-card p-6">
-      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+    <div className="rounded-xl border bg-card p-6 text-card-foreground shadow-sm">
+      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-blue/10 text-brand-blue">
         <Icon className="h-6 w-6" />
       </div>
       <h3 className="mt-4 font-display text-xl font-bold">{title}</h3>
@@ -317,9 +322,9 @@ function ValueCard({ icon: Icon, title, body }: { icon: typeof ShieldCheck; titl
 
 function FeatureCard({ icon: Icon, title, desc }: { icon: typeof Wrench; title: string; desc: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-      <Icon className="h-6 w-6 text-primary" />
-      <h4 className="mt-3 font-display text-lg font-bold">{title}</h4>
+    <div className="rounded-xl border border-white/10 bg-white/10 p-5 backdrop-blur">
+      <Icon className="h-6 w-6 text-brand-orange" />
+      <h4 className="mt-3 font-display text-lg font-bold text-white">{title}</h4>
       <p className="mt-1 text-xs text-white/70">{desc}</p>
     </div>
   );

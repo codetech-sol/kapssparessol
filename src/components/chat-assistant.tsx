@@ -103,7 +103,7 @@ export function ChatAssistant({ onOpenForm }: Props) {
                 "max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed",
                 m.role === "user"
                   ? "ml-auto bg-primary text-primary-foreground"
-                  : "bg-muted text-foreground",
+                  : "bg-muted text-black",
               )}
             >
               {m.content}

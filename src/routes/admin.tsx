@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { LogOut, Wrench, Loader2, ShieldAlert } from "lucide-react";
+import { LogOut, Loader2, ShieldAlert } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -137,12 +137,10 @@ function SignInCard() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-secondary p-4">
-      <div className="w-full max-w-md rounded-2xl border bg-card p-8 shadow-xl">
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="w-full max-w-md rounded-2xl border bg-card p-8 text-card-foreground shadow-xl">
         <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Wrench className="h-6 w-6" />
-          </div>
+          <img src="/logo.png" alt="KAPS Spares Solutions" className="h-12 w-auto" />
           <div>
             <h1 className="font-display text-2xl font-bold uppercase leading-none">KAPS Admin</h1>
             <p className="text-xs text-muted-foreground">Secure portal</p>
@@ -195,7 +193,7 @@ function SignInCard() {
 function NotAdmin({ email }: { email?: string }) {
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
-      <div className="max-w-md text-center">
+      <div className="max-w-md rounded-2xl border bg-card p-8 text-center text-card-foreground shadow-lg">
         <ShieldAlert className="mx-auto h-14 w-14 text-destructive" />
         <h1 className="mt-4 font-display text-2xl font-bold">Access denied</h1>
         <p className="mt-2 text-sm text-muted-foreground">
@@ -249,23 +247,22 @@ function Dashboard({ email }: { email?: string }) {
   };
 
   return (
-    <div className="min-h-screen bg-muted/40">
-      <header className="border-b bg-card">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
+    <div className="min-h-screen">
+      <header className="border-b border-white/10 bg-brand-blue/95 backdrop-blur">
+        <div className="brand-header-bar h-1" />
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 text-white">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Wrench className="h-5 w-5" />
-            </div>
+            <img src="/logo.png" alt="KAPS Spares Solutions" className="h-10 w-auto" />
             <div>
               <p className="font-display text-lg font-bold uppercase leading-none">KAPS Admin</p>
-              <p className="text-xs text-muted-foreground">{email}</p>
+              <p className="text-xs text-white/70">{email}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <Link to="/">
-              <Button variant="ghost" size="sm">View site</Button>
+              <Button variant="outline" size="sm" className="border-white/30 bg-transparent text-white hover:bg-white/10">View site</Button>
             </Link>
-            <Button variant="outline" size="sm" onClick={() => supabase.auth.signOut()}>
+            <Button variant="secondary" size="sm" onClick={() => supabase.auth.signOut()}>
               <LogOut className="mr-2 h-4 w-4" /> Sign out
             </Button>
           </div>
@@ -279,7 +276,7 @@ function Dashboard({ email }: { email?: string }) {
           <StatCard label="Resolved" value={counts.Resolved} tone="resolved" />
         </div>
 
-        <div className="rounded-xl border bg-card">
+        <div className="rounded-xl border bg-card text-card-foreground shadow-lg">
           <div className="flex items-center justify-between border-b px-6 py-4">
             <h2 className="font-display text-xl font-bold uppercase">Pending Requests</h2>
             <Button size="sm" variant="outline" onClick={load}>Refresh</Button>
@@ -349,12 +346,12 @@ function Dashboard({ email }: { email?: string }) {
 
 function StatCard({ label, value, tone }: { label: string; value: number; tone: "pending" | "progress" | "resolved" }) {
   const toneClass = {
-    pending: "border-amber-500/40 bg-amber-500/5",
-    progress: "border-blue-500/40 bg-blue-500/5",
-    resolved: "border-emerald-500/40 bg-emerald-500/5",
+    pending: "border-brand-orange/40 bg-card",
+    progress: "border-brand-blue/40 bg-card",
+    resolved: "border-emerald-500/40 bg-card",
   }[tone];
   return (
-    <div className={`rounded-xl border ${toneClass} p-6`}>
+    <div className={`rounded-xl border ${toneClass} p-6 text-card-foreground shadow-sm`}>
       <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{label}</p>
       <p className="mt-2 font-display text-4xl font-bold">{value}</p>
     </div>
