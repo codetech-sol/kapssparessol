@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MessageCircle, Send, X, FileText, Wrench } from "lucide-react";
+import { Send, X, FileText, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -59,17 +59,21 @@ export function ChatAssistant({ onOpenForm }: Props) {
 
   return (
     <>
-      {/* Floating trigger */}
-      <button
-        aria-label="Open KAPS virtual assistant"
-        onClick={() => setOpen(true)}
-        className={cn(
-          "fixed bottom-6 right-6 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-brand-orange text-white shadow-2xl transition hover:scale-105",
-          open && "hidden",
-        )}
-      >
-        <MessageCircle className="h-7 w-7" />
-      </button>
+      {/* Floating trigger with radiating pulse */}
+      {!open && (
+        <div className="chat-fab-pulse fixed bottom-6 right-6 z-40">
+          <span aria-hidden className="chat-fab-pulse__aura" />
+          <span aria-hidden className="chat-fab-pulse__aura chat-fab-pulse__aura--2" />
+          <button
+            type="button"
+            aria-label="Open KAPS virtual assistant"
+            onClick={() => setOpen(true)}
+            className="chat-fab-pulse__trigger"
+          >
+            <img src="/logo.png" alt="" />
+          </button>
+        </div>
+      )}
 
       {/* Chat window */}
       <div
