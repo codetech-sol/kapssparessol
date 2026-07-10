@@ -242,17 +242,28 @@
 
 .chat-fab-pulse {
   --chat-fab-pulse-duration: 3.2s;
+  --chat-fab-size: 4rem;
+  --chat-fab-ring-gap: 0.25rem;
+  --chat-fab-ring-width: 2.5px;
+  --chat-fab-ring-offset: calc(var(--chat-fab-ring-gap) + var(--chat-fab-ring-width));
+  --chat-fab-outer-size: calc(var(--chat-fab-size) + 2 * var(--chat-fab-ring-offset));
+  position: fixed;
+  right: calc(1.5rem - var(--chat-fab-ring-offset));
+  bottom: calc(1.5rem - var(--chat-fab-ring-offset));
+  z-index: 40;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 4rem;
-  height: 4rem;
+  width: var(--chat-fab-outer-size);
+  height: var(--chat-fab-outer-size);
+  overflow: visible;
 }
 
 .chat-fab-pulse__aura {
   position: absolute;
   top: 50%;
   left: 50%;
+  z-index: 0;
   width: 115%;
   height: 115%;
   border-radius: 50%;
@@ -274,12 +285,30 @@
   animation-delay: calc(var(--chat-fab-pulse-duration) * 0.5);
 }
 
+.chat-fab-pulse__ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  box-sizing: border-box;
+  width: var(--chat-fab-outer-size);
+  height: var(--chat-fab-outer-size);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: var(--chat-fab-ring-width) solid var(--brand-orange);
+  background: transparent;
+  pointer-events: none;
+  box-shadow:
+    0 0 6px color-mix(in srgb, var(--brand-orange) 22%, transparent),
+    inset 0 0 4px color-mix(in srgb, var(--brand-orange) 8%, transparent);
+}
+
 .chat-fab-pulse__trigger {
   position: relative;
-  z-index: 10;
+  z-index: 2;
   display: flex;
-  height: 4rem;
-  width: 4rem;
+  height: var(--chat-fab-size);
+  width: var(--chat-fab-size);
   align-items: center;
   justify-content: center;
   overflow: visible;

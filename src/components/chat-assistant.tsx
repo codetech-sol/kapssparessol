@@ -61,9 +61,10 @@ export function ChatAssistant({ onOpenForm }: Props) {
     <>
       {/* Floating trigger with radiating pulse */}
       {!open && (
-        <div className="chat-fab-pulse fixed bottom-6 right-6 z-40">
+        <div className="chat-fab-pulse">
           <span aria-hidden className="chat-fab-pulse__aura" />
           <span aria-hidden className="chat-fab-pulse__aura chat-fab-pulse__aura--2" />
+          <span aria-hidden className="chat-fab-pulse__ring" />
           <button
             type="button"
             aria-label="Open KAPS virtual assistant"
