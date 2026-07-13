@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { generateText } from "ai";
-import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
+import { createOpenAIProvider } from "@/lib/ai-gateway.server";
 import { COMPANY_PROFILE } from "@/lib/company-profile";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
@@ -31,18 +31,20 @@ export const Route = createFileRoute("/api/chat")({
           });
         }
 
-        const apiKey = process.env.LOVABLE_API_KEY;
+        const apiKey = process.env.OPENAI_API_KEY;
         if (!apiKey) {
           return new Response(
-            JSON.stringify({ error: "AI service is not configured." }),
+            JSON.stringify({ error: "AI service is not configured. Set OPENAI_API_KEY in your environment." }),
             { status: 500, headers: { "content-type": "application/json" } },
           );
         }
 
+        const model = process.env.OPENAI_MODEL ?? "gpt-4o-mini";
+
         try {
-          const gateway = createLovableAiGatewayProvider(apiKey);
+          const openai = createOpenAIProvider(apiKey);
           const { text } = await generateText({
-            model: gateway("google/gemini-2.5-flash"),
+            model: openai(model),
             system: SYSTEM_PROMPT,
             messages: messages.map((m) => ({ role: m.role, content: m.content })),
           });
