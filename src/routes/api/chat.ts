@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { generateText } from "ai";
-import { createOpenAIProvider } from "@/lib/ai-gateway.server";
 import { COMPANY_PROFILE } from "@/lib/company-profile";
+import {
+  createGeminiClient,
+  mapMessagesToGeminiContents,
+  type ChatMessage,
+} from "@/lib/gemini.server";
 
-type ChatMessage = { role: "user" | "assistant"; content: string };
 type ChatBody = { messages?: ChatMessage[] };
 
 const SYSTEM_PROMPT = `You are the KAPS Virtual Assistant for KAPS Spares Solutions Ltd, a Zambian automotive spare parts and vehicle service company. Answer user questions ONLY using the company profile provided below. Be friendly, concise, and professional.
@@ -31,29 +33,46 @@ export const Route = createFileRoute("/api/chat")({
           });
         }
 
-        const apiKey = process.env.OPENAI_API_KEY;
+        const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
           return new Response(
-            JSON.stringify({ error: "AI service is not configured. Set OPENAI_API_KEY in your environment." }),
+            JSON.stringify({
+              error: "AI service is not configured. Set GEMINI_API_KEY in your environment.",
+            }),
             { status: 500, headers: { "content-type": "application/json" } },
           );
         }
 
-        const model = process.env.OPENAI_MODEL ?? "gpt-4o-mini";
+        const modelName = process.env.GEMINI_MODEL ?? "gemini-1.5-flash";
+        const contents = mapMessagesToGeminiContents(messages);
+
+        if (contents.length === 0) {
+          return new Response(JSON.stringify({ error: "No user messages to process." }), {
+            status: 400,
+            headers: { "content-type": "application/json" },
+          });
+        }
 
         try {
-          const openai = createOpenAIProvider(apiKey);
-          const { text } = await generateText({
-            model: openai(model),
-            system: SYSTEM_PROMPT,
-            messages: messages.map((m) => ({ role: m.role, content: m.content })),
+          const genAI = createGeminiClient(apiKey);
+          const model = genAI.getGenerativeModel({
+            model: modelName,
+            systemInstruction: SYSTEM_PROMPT,
           });
+
+          const result = await model.generateContent({ contents });
+          const text = result.response.text();
+
           return new Response(JSON.stringify({ reply: text }), {
             headers: { "content-type": "application/json" },
           });
         } catch (err) {
           const message = err instanceof Error ? err.message : "Unknown error";
-          const status = /429/.test(message) ? 429 : /402/.test(message) ? 402 : 500;
+          const status = /429|RESOURCE_EXHAUSTED/i.test(message)
+            ? 429
+            : /402|quota/i.test(message)
+              ? 402
+              : 500;
           return new Response(JSON.stringify({ error: message }), {
             status,
             headers: { "content-type": "application/json" },
