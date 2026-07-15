@@ -1,82 +1,91 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { COMPANY_PROFILE } from "@/lib/company-profile";
-import {
-  createGeminiClient,
-  mapMessagesToGeminiContents,
-  type ChatMessage,
-} from "@/lib/gemini.server";
+import nodemailer from "nodemailer";
 
-type ChatBody = { messages?: ChatMessage[] };
+type LeadBody = {
+  name?: string;
+  email?: string;
+  contactNumber?: string;
+  initialMessage?: string;
+};
 
-const SYSTEM_PROMPT = `You are the KAPS Virtual Assistant for KAPS Spares Solutions Ltd, a Zambian automotive spare parts and vehicle service company. Answer user questions ONLY using the company profile provided below. Be friendly, concise, and professional.
-
-Rules:
-- Answer questions about our services, spare parts categories, branches, contact details, delivery, or company info directly from the profile.
-- If a user asks about a specific part or service and the profile does not confirm we currently stock/offer that specific item, DO NOT invent availability. Instead, explain that we source virtually any part on demand through our international supplier network (China, Dubai, South Africa, Japan) and suggest they submit a formal request via the "Submit a Formal Request" button so our team can get back to them with pricing and availability.
-- If a question is completely unrelated to KAPS or automotive matters, politely redirect back to how you can help.
-- Keep responses under 150 words. Use plain text, no markdown headers.
-
-=== COMPANY PROFILE ===
-${COMPANY_PROFILE}
-=== END PROFILE ===`;
+function jsonResponse(body: Record<string, unknown>, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "content-type": "application/json" },
+  });
+}
 
 export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const body = (await request.json()) as ChatBody;
-        const messages = Array.isArray(body.messages) ? body.messages : [];
-        if (messages.length === 0) {
-          return new Response(JSON.stringify({ error: "No messages" }), {
-            status: 400,
-            headers: { "content-type": "application/json" },
-          });
+        const body = (await request.json()) as LeadBody;
+
+        const name = body.name?.trim();
+        const email = body.email?.trim();
+        const contactNumber = body.contactNumber?.trim();
+        const initialMessage = body.initialMessage?.trim();
+
+        if (!name || !email || !contactNumber || !initialMessage) {
+          return jsonResponse({ error: "Name, email, contact number, and initial message are required." }, 400);
         }
 
-        const apiKey = process.env.GEMINI_API_KEY;
-        if (!apiKey) {
-          return new Response(
-            JSON.stringify({
-              error: "AI service is not configured. Set GEMINI_API_KEY in your environment.",
-            }),
-            { status: 500, headers: { "content-type": "application/json" } },
+        const smtpHost = process.env.SMTP_HOST;
+        const smtpPort = process.env.SMTP_PORT;
+        const smtpUser = process.env.SMTP_USER;
+        const smtpPass = process.env.SMTP_PASS;
+        const adminEmail = process.env.ADMIN_EMAIL;
+
+        if (!smtpHost || !smtpPort || !smtpUser || !smtpPass || !adminEmail) {
+          return jsonResponse(
+            {
+              error:
+                "Email service is not configured. Set SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, and ADMIN_EMAIL.",
+            },
+            500,
           );
         }
 
-        const modelName = process.env.GEMINI_MODEL ?? "gemini-1.5-flash";
-        const contents = mapMessagesToGeminiContents(messages);
-
-        if (contents.length === 0) {
-          return new Response(JSON.stringify({ error: "No user messages to process." }), {
-            status: 400,
-            headers: { "content-type": "application/json" },
-          });
-        }
+        const transporter = nodemailer.createTransport({
+          host: smtpHost,
+          port: Number(smtpPort),
+          secure: Number(smtpPort) === 465,
+          auth: {
+            user: smtpUser,
+            pass: smtpPass,
+          },
+        });
 
         try {
-          const genAI = createGeminiClient(apiKey);
-          const model = genAI.getGenerativeModel({
-            model: modelName,
-            systemInstruction: SYSTEM_PROMPT,
+          await transporter.sendMail({
+            from: smtpUser,
+            to: adminEmail,
+            replyTo: email,
+            subject: `New chat lead from ${name}`,
+            text: [
+              "A new lead was submitted via the website chat.",
+              "",
+              `Name: ${name}`,
+              `Email: ${email}`,
+              `Contact Number: ${contactNumber}`,
+              "",
+              "Initial message:",
+              initialMessage,
+            ].join("\n"),
+            html: `
+              <h2>New chat lead</h2>
+              <p><strong>Name:</strong> ${name}</p>
+              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>Contact Number:</strong> ${contactNumber}</p>
+              <p><strong>Initial message:</strong></p>
+              <p>${initialMessage.replace(/\n/g, "<br>")}</p>
+            `,
           });
 
-          const result = await model.generateContent({ contents });
-          const text = result.response.text();
-
-          return new Response(JSON.stringify({ reply: text }), {
-            headers: { "content-type": "application/json" },
-          });
+          return jsonResponse({ success: true });
         } catch (err) {
-          const message = err instanceof Error ? err.message : "Unknown error";
-          const status = /429|RESOURCE_EXHAUSTED/i.test(message)
-            ? 429
-            : /402|quota/i.test(message)
-              ? 402
-              : 500;
-          return new Response(JSON.stringify({ error: message }), {
-            status,
-            headers: { "content-type": "application/json" },
-          });
+          const message = err instanceof Error ? err.message : "Failed to send email.";
+          return jsonResponse({ error: message }, 500);
         }
       },
     },
